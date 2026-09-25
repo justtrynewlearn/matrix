@@ -14,7 +14,7 @@ jobs:
       - name: Create matrix
         id: config
         run: |
-          echo 'matrix={"threads":[10,50,100]}' >> "$GITHUB_OUTPUT"
+          echo 'matrix={"environment":["staging","production"],"threads":[10,50]}' >> "$GITHUB_OUTPUT"
 
   performance-test:
     needs: prepare
@@ -29,4 +29,5 @@ jobs:
       - name: Run performance test
         run: |
           echo "Running performance test"
+          echo "Environment: ${{ matrix.environment }}"
           echo "Threads: ${{ matrix.threads }}"
