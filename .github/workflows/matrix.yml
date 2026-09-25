@@ -38,6 +38,7 @@ jobs:
 
   report:
     needs: performance-test
+    if: ${{ always() }}
 
     runs-on: ubuntu-latest
 
@@ -45,3 +46,4 @@ jobs:
       - name: Generate report
         run: |
           echo "Generating performance test report"
+          echo "Performance tests finished"
