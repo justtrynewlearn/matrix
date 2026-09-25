@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: Test join
         run: |
-          echo "${{ join(fromJSON('[10,50,100]'), ', ') }}"
+          echo "${{ join(fromJSON('[10,50,100]'), ' → ') }}"
