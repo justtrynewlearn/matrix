@@ -1,4 +1,4 @@
-name: Join + Matrix
+name: Matrix Continue On Error
 
 on:
   push:
@@ -6,13 +6,32 @@ on:
 jobs:
   performance-test:
     strategy:
+      fail-fast: false
+
       matrix:
-        threads: [10, 50, 100]
+        include:
+          - threads: 10
+            experimental: false
+
+          - threads: 50
+            experimental: false
+
+          - threads: 100
+            experimental: true
+
+    continue-on-error: ${{ matrix.experimental }}
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show configuration
+      - name: Run performance test
         run: |
-          echo "Current threads: ${{ matrix.threads }}"
-          echo "Load levels: ${{ join(fromJSON('[10,50,100]'), ', ') }}"
+          echo "Threads: ${{ matrix.threads }}"
+          echo "Experimental: ${{ matrix.experimental }}"
+
+          if [ "${{ matrix.threads }}" = "100" ]; then
+            echo "Experimental test failed"
+            exit 1
+          fi
+
+          echo "Test passed"
