@@ -1,4 +1,4 @@
-name: Matrix + Needs
+name: Dynamic Matrix
 
 on:
   push:
@@ -7,43 +7,26 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
 
+    outputs:
+      matrix: ${{ steps.config.outputs.matrix }}
+
     steps:
-      - name: Prepare test
+      - name: Create matrix
+        id: config
         run: |
-          echo "Preparing performance test"
-          echo "Environment: staging"
+          echo 'matrix={"threads":[10,50,100]}' >> "$GITHUB_OUTPUT"
 
   performance-test:
     needs: prepare
 
     strategy:
       fail-fast: false
-
-      matrix:
-        threads: [10, 50, 100]
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
 
     runs-on: ubuntu-latest
 
     steps:
       - name: Run performance test
         run: |
-          echo "Running test with ${{ matrix.threads }} threads"
-
-          if [ "${{ matrix.threads }}" = "50" ]; then
-            echo "Performance test failed"
-            exit 1
-          fi
-
-          echo "Performance test passed"
-
-  report:
-    needs: performance-test
-    if: ${{ always() }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Generate report
-        run: |
-          echo "Generating performance test report"
-          echo "Performance tests finished"
+          echo "Running performance test"
+          echo "Threads: ${{ matrix.threads }}"
