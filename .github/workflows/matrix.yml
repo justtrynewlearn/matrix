@@ -6,18 +6,21 @@ on:
 jobs:
   performance-test:
     strategy:
-      matrix:
-        environment: [staging, production]
-        threads: [10, 50]
+      fail-fast: false
 
-        exclude:
-          - environment: production
-            threads: 10
+      matrix:
+        threads: [10, 50, 100]
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show configuration
+      - name: Run test
         run: |
-          echo "Environment: ${{ matrix.environment }}"
           echo "Threads: ${{ matrix.threads }}"
+
+          if [ "${{ matrix.threads }}" = "50" ]; then
+            echo "Test failed"
+            exit 1
+          fi
+
+          echo "Test passed"
