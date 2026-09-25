@@ -18,6 +18,7 @@ jobs:
 
     strategy:
       fail-fast: false
+
       matrix:
         threads: [10, 50, 100]
 
@@ -26,9 +27,14 @@ jobs:
     steps:
       - name: Run performance test
         run: |
-          echo "Running performance test"
-          echo "Threads: ${{ matrix.threads }}"
-          echo "Environment: staging"
+          echo "Running test with ${{ matrix.threads }} threads"
+
+          if [ "${{ matrix.threads }}" = "50" ]; then
+            echo "Performance test failed"
+            exit 1
+          fi
+
+          echo "Performance test passed"
 
   report:
     needs: performance-test
