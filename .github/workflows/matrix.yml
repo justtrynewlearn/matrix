@@ -10,11 +10,16 @@ jobs:
         environment: [staging, production]
         threads: [10, 50]
 
+        include:
+          - environment: staging
+            threads: 100
+            duration: 5m
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Show configuration
         run: |
-          echo "Running performance test"
           echo "Environment: ${{ matrix.environment }}"
           echo "Threads: ${{ matrix.threads }}"
+          echo "Duration: ${{ matrix.duration }}"
