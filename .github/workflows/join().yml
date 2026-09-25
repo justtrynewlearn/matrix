@@ -1,0 +1,13 @@
+name: Join Practice
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test join
+        run: |
+          echo "${{ join(fromJSON('[10,50,100]'), ', ') }}"
