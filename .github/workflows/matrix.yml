@@ -7,7 +7,8 @@ jobs:
   performance-test:
     strategy:
       matrix:
-        threads: [10, 50, 100]
+        environment: [staging, production]
+        threads: [10, 50]
 
     runs-on: ubuntu-latest
 
@@ -15,4 +16,5 @@ jobs:
       - name: Show configuration
         run: |
           echo "Running performance test"
+          echo "Environment: ${{ matrix.environment }}"
           echo "Threads: ${{ matrix.threads }}"
