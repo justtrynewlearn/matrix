@@ -1,13 +1,18 @@
-name: Join Practice
+name: Join + Matrix
 
 on:
   push:
 
 jobs:
-  test:
+  performance-test:
+    strategy:
+      matrix:
+        threads: [10, 50, 100]
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test join
+      - name: Show configuration
         run: |
-          echo "${{ join(fromJSON('[10,50,100]'), ' → ') }}"
+          echo "Current threads: ${{ matrix.threads }}"
+          echo "Load levels: ${{ join(fromJSON('[10,50,100]'), ', ') }}"
