@@ -1,26 +1,41 @@
-name: Matrix Practice
+name: Matrix + Needs
 
 on:
   push:
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare test
+        run: |
+          echo "Preparing performance test"
+          echo "Environment: staging"
+
   performance-test:
+    needs: prepare
+
     strategy:
       fail-fast: false
-
       matrix:
         threads: [10, 50, 100]
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run test
+      - name: Run performance test
         run: |
+          echo "Running performance test"
           echo "Threads: ${{ matrix.threads }}"
+          echo "Environment: staging"
 
-          if [ "${{ matrix.threads }}" = "50" ]; then
-            echo "Test failed"
-            exit 1
-          fi
+  report:
+    needs: performance-test
 
-          echo "Test passed"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate report
+        run: |
+          echo "Generating performance test report"
